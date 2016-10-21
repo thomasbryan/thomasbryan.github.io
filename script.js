@@ -25,6 +25,9 @@ $(document).on('click touchstart','.branch',function() {
   var branch = $(this).data('branch');
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"read","branch":branch},"f":"read"});
 });
+$(document).on('click touchstart','#twig',function() {
+  read([{"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""}]);
+});
 function read(req) {
   $('#trunk').val(req[0].trunk);
   $('#branch').val(req[0].branch);
