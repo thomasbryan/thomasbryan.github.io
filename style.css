@@ -34,4 +34,5 @@ textarea { resize: none; }
   background-color: #e7e7e7;
 }
 #content > .col-sm-9 { padding: 20px; }
+#search { margin: 8px -15px; }
 #search input { width: 300px; }
