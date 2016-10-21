@@ -19,6 +19,7 @@ $(document).on('click touchstart','.navbar-brand',function() {
   $('#name').val('');
   $('#info').val('');
   if($('#name').is(':visible')) $('#name').focus();
+  $('#twig').addClass('hidden');
 });
 $(document).on('click touchstart','.branch',function() {
   var branch = $(this).data('branch');
@@ -29,6 +30,7 @@ function read(req) {
   $('#branch').val(req[0].branch);
   $('#name').val(req[0].name);
   $('#info').val(req[0].info);
+  $('#twig').removeClass('hidden');
 }
 $('#plan form').on('submit',function(e) {
   var trunk = $('#trunk').val()
