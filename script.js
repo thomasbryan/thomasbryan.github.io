@@ -14,10 +14,7 @@ $(document).ready(function() {
 });
 /* Planning */
 $(document).on('click touchstart','.navbar-brand',function() {
-  $('#trunk').val(0);
-  $('#branch').val(0);
-  $('#name').val('');
-  $('#info').val('');
+  plandata([{"trunk":0,"branch":0,"name":"","info":""}]);
   if($('#name').is(':visible')) $('#name').focus();
   $('#twig').addClass('hidden');
 });
@@ -26,14 +23,18 @@ $(document).on('click touchstart','.branch',function() {
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"read","branch":branch},"f":"read"});
 });
 $(document).on('click touchstart','#twig',function() {
-  read([{"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""}]);
+  plandata([{"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""}]);
+  $('#twig').addClass('hidden');
 });
 function read(req) {
-  $('#trunk').val(req[0].trunk);
-  $('#branch').val(req[0].branch);
-  $('#name').val(req[0].name);
-  $('#info').val(req[0].info);
+  plandata({"trunk":req[0].trunk,"branch":req[0].branch,"name":req[0].name,"info":req[0].info});
   $('#twig').removeClass('hidden');
+}
+function plandata(req) {
+  $('#trunk').val(req.trunk);
+  $('#branch').val(req.branch);
+  $('#name').val(req.name);
+  $('#info').val(req.info);
 }
 $('#plan form').on('submit',function(e) {
   var trunk = $('#trunk').val()
