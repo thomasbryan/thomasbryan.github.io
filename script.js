@@ -64,7 +64,7 @@ function plan() {
 }
 function projectlist(req) {
   $.each(req,function(k,v) {
-    $('#content .nav').append('<li id="branch-'+v.branch+'" class="branch" data-branch="'+v.branch+'"><a href="#">'+v.name);
+    $('#content .nav').append('<li id="branch-'+v.branch+'" class="branch" data-branch="'+v.branch+'"><a href="#">'+v.name+'<i class="twig t'+v.twigs+' btn btn-success pull-right fa fa-leaf">');
   });
 }
 /* Authentication */
