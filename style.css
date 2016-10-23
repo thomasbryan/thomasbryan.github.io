@@ -1,5 +1,4 @@
 body {
-  overflow: hidden;
   padding-top: 50px;
   -webkit-user-select: none; 
   -moz-user-select: none; 
@@ -8,19 +7,17 @@ body {
   user-select: none;
 }
 textarea { resize: none; }
-@media (min-width: 768px) {
-  #content > .col-sm-3 {
-    position: fixed;
-    top: 50px;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    display: block;
-    padding: 0 20px;
-    overflow-x: hidden;
-    overflow-y: auto; 
-    background-color: #f8f8f8;
-  }
+#content > .col-sm-3 {
+  position: fixed;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  padding: 0 20px;
+  overflow-x: hidden;
+  overflow-y: auto; 
+  background-color: #f8f8f8;
 }
 #content > .col-sm-3 > .nav > li { white-space: nowrap; }
 #content > .col-sm-3 > .nav { margin: 0 -20px 20px; }

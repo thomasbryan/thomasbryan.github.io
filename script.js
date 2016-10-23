@@ -1,5 +1,5 @@
 /* Init */
-var app = {"auth": readCookie('project'),"cache":{}};
+var app = {"auth": readCookie('project'),"mode":readCookie('mode'),"cache":{}};
 if(typeof($.fn.modal) === 'undefined') {document.write('<script src="fonts/bootstrap.min.js"><\/script>')}
 $(document).ready(function() {
   if($('body').css('color') != 'rgb(51, 51, 51)') {
@@ -9,23 +9,34 @@ $(document).ready(function() {
   }
   if($('.fa').css('display') != 'inline-block') 
     $("head").prepend('<link rel="stylesheet" href="fonts/font-awesome.min.css">');
-  if(app.auth!=null) 
-    plan();
+  startTime();
+  if(app.mode==null) app.mode = updateCookie("mode","plan");
+  if(app.auth!=null) init();
 });
 /* Planning */
+$(document).on('touchend','.navbar-brand',function() {
+  var dom = '#content .col-sm-3';
+  if($(dom).hasClass('hidden-xs')) {
+    $(dom).removeClass('hidden-xs');
+  }else{
+    $(dom).addClass('hidden-xs');
+  }
+});
 $(document).on('click','.navbar-brand',function() {
   plandata({"trunk":0,"branch":0,"name":"","info":""});
   if($('#name').is(':visible')) $('#name').focus();
   $('#twig').addClass('hidden');
 });
-$(document).on('click','.branch',function() {
+$(document).on('click touchend','.branch',function() {
+  //add class hidden-xs
   var branch = $(this).parent().data('branch');
+  $('#content .col-sm-3').addClass('hidden-xs');
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"read","branch":branch},"f":"read"});
 });
 $(document).on('click','.twig',function() {
   var branch = $(this).parent().data('branch');
   app.cache.twig=branch;
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","branch":branch},"f":"twigs"});
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":branch},"f":"twigs"});
 });
 $(document).on('click','#twig',function() {
   plandata({"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""});
@@ -36,11 +47,11 @@ function read(req) {
   $('#twig').removeClass('hidden');
 }
 function twigs(req) {
-  var lvl = $('#branch-'+app.cache.twig+' a .fa-angle-right').length + 1
+  var lvl = $('#branch-'+app.cache.twig+' a .fa-chevron-right').length + 1
     , pre = ''
     ;
   for(i=0;i<lvl;i++) {
-    pre += '<i class="fa fa-angle-right"></i>';
+    pre += '<i class="fa fa-chevron-right"></i>';
   }
   $('.trunk-'+app.cache.twig).remove();
   $.each(req,function(k,v) {
@@ -69,6 +80,7 @@ function createupdate(req) {
     , id = '#branch-'+branch
     , name = $('#name').val()
     ;
+  $('#twig').removeClass('hidden');
   if($(id).length != 0) {
     $(id+' a span').html($('#name').val());
   }else{
@@ -83,12 +95,31 @@ function plan() {
   hide();
   $('#plan, #search, #nav .plan').removeClass('hidden');
   $('#name').focus();
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","branch":0},"f":"projectlist"});
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":0},"f":"projectlist"});
 }
 function projectlist(req) {
   $.each(req,function(k,v) {
     $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a><i class="twig t'+v.twigs+' btn btn-success fa fa-leaf">');
   });
+}
+$(document).on('click','#planning',function() {
+  app.mode="plan";
+  init();
+});
+/* Working */
+$(document).on('click touchend','#working',function() {
+  app.mode="work";
+  init();
+});
+function tasklist(req) {
+  $.each(req,function(k,v) {
+    $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="task"><span>'+v.name+'</span></a>');
+  });
+}
+function work() {
+  hide();
+  $('#work, #nav .work').removeClass('hidden');
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","twig":0},"f":"tasklist"});
 }
 /* Authentication */
 $('#login form').on('submit',function(e){
@@ -115,6 +146,10 @@ $(document).on('click touchstart','#logout',function(e) {
   login();
 });
 /* Utilities */
+function init() {
+  updateCookie("mode",app.mode);
+  window[app.mode]();
+}
 function action(r) {
   $.ajax({
     beforeSend: function(e) { e.setRequestHeader('Authorization', app.auth); },
@@ -160,4 +195,18 @@ $(document).on('click touchstart','a',function(e) {
 function hide() {
   $('#content > .col-sm-9 > div, #search, #nav li').addClass('hidden');
   $('#content > .col-sm-3 li').remove();
+}
+function startTime() {
+  var t = new Date()
+    , h = t.getHours()
+    , m = t.getMinutes()
+    , s = t.getSeconds()
+    , a = (h < 12) ? "AM" : "PM"
+    , m = (m < 10 ? "0" : "" ) + m
+    , s = (s < 10 ? "0" : "" ) + s
+    , h = (h > 12) ? h - 12 : h
+    , h = (h == 0) ? 12 : h
+    , d = setTimeout(startTime, 500);
+    ;
+  $("#work .jumbotron h1").html(h+":"+m+":"+s+" "+a);
 }
