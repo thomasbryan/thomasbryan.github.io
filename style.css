@@ -22,6 +22,7 @@ textarea { resize: none; }
     background-color: #f8f8f8;
   }
 }
+#content > .col-sm-3 > .nav > li { white-space: nowrap; }
 #content > .col-sm-3 > .nav { margin: 0 -20px 20px; }
 #content > .col-sm-3 > .nav > li > a {
   color: #777;
@@ -38,4 +39,4 @@ textarea { resize: none; }
 #search .form-group { margin-bottom: 0px; }
 #search input { width: 250px; }
 .t0 { display: none; }
-.twig { margin-top: -4px; }
+.twig { position: absolute; top: 5px; right: 5px; }

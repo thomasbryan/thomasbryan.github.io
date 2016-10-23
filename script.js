@@ -13,22 +13,41 @@ $(document).ready(function() {
     plan();
 });
 /* Planning */
-$(document).on('click touchstart','.navbar-brand',function() {
-  plandata([{"trunk":0,"branch":0,"name":"","info":""}]);
+$(document).on('click','.navbar-brand',function() {
+  plandata({"trunk":0,"branch":0,"name":"","info":""});
   if($('#name').is(':visible')) $('#name').focus();
   $('#twig').addClass('hidden');
 });
-$(document).on('click touchstart','.branch',function() {
-  var branch = $(this).data('branch');
+$(document).on('click','.branch',function() {
+  var branch = $(this).parent().data('branch');
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"read","branch":branch},"f":"read"});
 });
-$(document).on('click touchstart','#twig',function() {
-  plandata([{"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""}]);
+$(document).on('click','.twig',function() {
+  var branch = $(this).parent().data('branch');
+  app.cache.twig=branch;
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","branch":branch},"f":"twigs"});
+});
+$(document).on('click','#twig',function() {
+  plandata({"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""});
   $('#twig').addClass('hidden');
 });
 function read(req) {
   plandata({"trunk":req[0].trunk,"branch":req[0].branch,"name":req[0].name,"info":req[0].info});
   $('#twig').removeClass('hidden');
+}
+function twigs(req) {
+  var lvl = $('#branch-'+app.cache.twig+' a .fa-angle-right').length + 1
+    , pre = ''
+    ;
+  for(i=0;i<lvl;i++) {
+    pre += '<i class="fa fa-angle-right"></i>';
+  }
+  $('.trunk-'+app.cache.twig).remove();
+  $.each(req,function(k,v) {
+    $('#branch-'+app.cache.twig).after('<li id="branch-'+v.branch+'" class="trunk-'+app.cache.twig+'" data-branch="'+v.branch+'"><a href="#" class="branch">'+pre+' <span>'+v.name+'</span></a><i class="twig t'+v.twigs+' btn btn-success fa fa-leaf">');
+  });
+  $('#branch-'+app.cache.twig+' .twig').addClass('t0').removeClass('t1');
+  delete app.cache.twig;
 }
 function plandata(req) {
   $('#trunk').val(req.trunk);
@@ -50,21 +69,25 @@ function createupdate(req) {
     , id = '#branch-'+branch
     , name = $('#name').val()
     ;
-  if($(id)) {
-    $(id+' a').html($('#name').val());
+  if($(id).length != 0) {
+    $(id+' a span').html($('#name').val());
   }else{
-    $('#content .nav').append('<li id="branch-'+branch+'" class="branch" data-branch="'+branch+'"><a href="#">'+name);
+    if(req.trunk > 0) {
+      $('#branch-'+req.trunk+' .twig').click();
+    }else{
+      $('#content .nav').append('<li id="branch-'+branch+'" class="trunk-0" data-branch="'+branch+'"><a href="#" class="branch"><span>'+name+'</span></a><i class="twig t'+twigs+' btn btn-success fa fa-leaf">');
+    }
   }
 }
 function plan() {
   hide();
   $('#plan, #search, #nav .plan').removeClass('hidden');
   $('#name').focus();
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"projects"},"f":"projectlist"});
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","branch":0},"f":"projectlist"});
 }
 function projectlist(req) {
   $.each(req,function(k,v) {
-    $('#content .nav').append('<li id="branch-'+v.branch+'" class="branch" data-branch="'+v.branch+'"><a href="#">'+v.name+'<i class="twig t'+v.twigs+' btn btn-success pull-right fa fa-leaf">');
+    $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a><i class="twig t'+v.twigs+' btn btn-success fa fa-leaf">');
   });
 }
 /* Authentication */
