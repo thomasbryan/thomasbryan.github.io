@@ -28,7 +28,6 @@ $(document).on('click','.navbar-brand',function() {
   $('#twig').addClass('hidden');
 });
 $(document).on('click touchend','.branch',function() {
-  //add class hidden-xs
   var branch = $(this).parent().data('branch');
   $('#content .col-sm-3').addClass('hidden-xs');
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"read","branch":branch},"f":"read"});
