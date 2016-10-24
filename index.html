@@ -72,7 +72,22 @@
           <div id="work" class="hidden">
             <div class="jumbotron">
               <h1 class="text-center"></h1>
+              <h2 class="text-center"></h2>
+              <div id="ip" class="btn-group btn-group-justified" role="group" aria-label="In Progress">
+                <div class="btn-group" role="group">
+                  <button data-state="1" type="button" class="btn btn-warning btn-lg">In Progress <i class="fa fa-minus-circle"></i></button>
+                </div>
+              </div>
+              <div id="td" class="btn-group btn-group-justified" role="group" aria-label="Todo / Done">
+                <div class="btn-group " role="group">
+                  <button data-state="0" type="button" class="btn btn-danger btn-lg">Todo <i class="fa fa-times-circle"></i></button>
+                </div>
+                <div class="btn-group " role="group">
+                  <button data-state="2" type="button" class="btn btn-success btn-lg">Done <i class="fa fa-check-circle"></i></button>
+                </div>
+              </div>
             </div>
+            <pre></pre>
           </div>
           <div id="report" class="hidden">
           </div>

@@ -6,11 +6,11 @@ $(document).ready(function() {
     $localbootstrap = $('<link rel="stylesheet" href="fonts/bootstrap.min.css">');
     $("head").prepend($localbootstrap);
     $localbootstrap.on('load',function() { $('#init').remove(); });
-  }
+  }else{ $('#init').remove(); }
   if($('.fa').css('display') != 'inline-block') 
     $("head").prepend('<link rel="stylesheet" href="fonts/font-awesome.min.css">');
   startTime();
-  if(app.mode==null) app.mode = updateCookie("mode","plan");
+  if(app.mode==null) app.mode = updateCookie("mode","plan",7);
   if(app.auth!=null) init();
 });
 /* Planning */
@@ -27,23 +27,57 @@ $(document).on('click','.navbar-brand',function() {
   if($('#name').is(':visible')) $('#name').focus();
   $('#twig').addClass('hidden');
 });
-$(document).on('click touchend','.branch',function() {
-  var branch = $(this).parent().data('branch');
+$(document).on('click','.branch',function() {
+  var branch = $(this).parent().data('branch')
+    , func = ($('#work').is(':visible')) ? "workread":"planread"
+    , todo = $('#work #td').is(':visible')
+    ;
   $('#content .col-sm-3').addClass('hidden-xs');
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"read","branch":branch},"f":"read"});
+  if(!(todo&&func=="workread")) 
+    action({"u":"https://home.thomasbryan.info/project/","d":{"req":"read","branch":branch},"f":func});
 });
 $(document).on('click','.twig',function() {
-  var branch = $(this).parent().data('branch');
-  app.cache.twig=branch;
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":branch},"f":"twigs"});
+  var branch = $(this).parent().data('branch')
+    , expand = $(this).hasClass('btn-success')
+    , cache = $('.trunk-'+branch).length
+    ;
+  if(expand) {
+    if(cache>0) {
+      $('.trunk-'+branch).removeClass('hidden');
+      $('#branch-'+branch+' .twig').addClass('btn-danger').removeClass('btn-success');
+    }else{
+      app.cache.twig=branch;
+      action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":branch},"f":"twigs"});
+    }
+  }else{
+    $('.trunk-'+branch+' .btn-danger').click();
+    $('.trunk-'+branch).addClass('hidden');
+    $('#branch-'+branch+' .twig').removeClass('btn-danger').addClass('btn-success');
+  }
 });
 $(document).on('click','#twig',function() {
   plandata({"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""});
   $('#twig').addClass('hidden');
 });
-function read(req) {
-  plandata({"trunk":req[0].trunk,"branch":req[0].branch,"name":req[0].name,"info":req[0].info});
+function planread(req) {
   $('#twig').removeClass('hidden');
+  plandata({"trunk":req[0].trunk,"branch":req[0].branch,"name":req[0].name,"info":req[0].info,"state":req[0].state});
+}
+function workread(req) {
+  if(req[0]!==undefined) {
+    var show = '#ip'
+      , hide = '#td'
+      ;
+    if(req[0].state == 1) {
+      show = '#td';
+      hide = '#ip';
+    }
+    $('#work').data('branch',req[0].branch);
+    $('#work .jumbotron h2').html(req[0].name);
+    $('#work pre').html(req[0].info);
+    $(show).removeClass('hidden');
+    $(hide).addClass('hidden');
+  }
 }
 function twigs(req) {
   var lvl = $('#branch-'+app.cache.twig+' a .fa-chevron-right').length + 1
@@ -54,9 +88,10 @@ function twigs(req) {
   }
   $('.trunk-'+app.cache.twig).remove();
   $.each(req,function(k,v) {
+    if(v.state == 2) v.name = '<strike>'+v.name+'</strike>';
     $('#branch-'+app.cache.twig).after('<li id="branch-'+v.branch+'" class="trunk-'+app.cache.twig+'" data-branch="'+v.branch+'"><a href="#" class="branch">'+pre+' <span>'+v.name+'</span></a><i class="twig t'+v.twigs+' btn btn-success fa fa-leaf">');
   });
-  $('#branch-'+app.cache.twig+' .twig').addClass('t0').removeClass('t1');
+  $('#branch-'+app.cache.twig+' .twig').addClass('btn-danger').removeClass('btn-success');
   delete app.cache.twig;
 }
 function plandata(req) {
@@ -64,6 +99,15 @@ function plandata(req) {
   $('#branch').val(req.branch);
   $('#name').val(req.name);
   $('#info').val(req.info);
+  if(req.state==2) {
+    $('#name').prop('disabled',true);
+    $('#info').prop('disabled',true);
+    $('#twig, #plan button').addClass('hidden');
+  }else{
+    $('#name').prop('disabled',false);
+    $('#info').prop('disabled',false);
+    $('#twig, #plan button').removeClass('hidden');
+  }
 }
 $('#plan form').on('submit',function(e) {
   var trunk = $('#trunk').val()
@@ -94,31 +138,54 @@ function plan() {
   hide();
   $('#plan, #search, #nav .plan').removeClass('hidden');
   $('#name').focus();
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":0},"f":"projectlist"});
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":0},"f":"trunklist"});
 }
-function projectlist(req) {
+function trunklist(req) {
   $.each(req,function(k,v) {
+    if(v.state == 2) v.name = '<strike>'+v.name+'</strike>';
     $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a><i class="twig t'+v.twigs+' btn btn-success fa fa-leaf">');
   });
 }
 $(document).on('click','#planning',function() {
+  navbar();
   app.mode="plan";
   init();
 });
 /* Working */
 $(document).on('click touchend','#working',function() {
+  navbar();
   app.mode="work";
   init();
 });
-function tasklist(req) {
-  $.each(req,function(k,v) {
-    $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="task"><span>'+v.name+'</span></a>');
-  });
-}
+$(document).on('click','#work button',function() {
+  var branch = $('#work').data('branch')
+    , state = $(this).data('state')
+    ;
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"state","branch":branch,"state":state},"f":"state"});
+});
 function work() {
   hide();
   $('#work, #nav .work').removeClass('hidden');
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","twig":0},"f":"tasklist"});
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","state":0},"f":"twiglist"});
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","state":1},"f":"workread"});
+}
+function twiglist(req) {
+  $.each(req,function(k,v) {
+    $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a>');
+  });
+}
+function state(req) {
+  switch(req.state) {
+    case 0:$('#td').addClass('hidden');$('#ip').removeClass('hidden'); break;
+    case 1:$('#ip').addClass('hidden');$('#td').removeClass('hidden'); break;
+    case 2: 
+      $('#branch-'+req.branch).remove();
+      $('#work').data('branch',undefined);
+      $('#work .jumbotron h2').html('');
+      $('#work pre').html('');
+      $('#ip, #td').addClass('hidden');
+    break;
+  }
 }
 /* Authentication */
 $('#login form').on('submit',function(e){
@@ -137,16 +204,17 @@ function login() {
 }
 function loggedin(req) {
   app.auth=req;
-  updateCookie("project",app.auth);
+  updateCookie("project",app.auth,7);
   plan();
 }
 $(document).on('click touchstart','#logout',function(e) {
+  navbar();
   deleteCookie('project');
   login();
 });
 /* Utilities */
 function init() {
-  updateCookie("mode",app.mode);
+  updateCookie("mode",app.mode,7);
   window[app.mode]();
 }
 function action(r) {
@@ -168,7 +236,7 @@ function createCookie(n,v,d) {
     t.setTime(t.getTime() + (d * 24 * 60 * 60 * 1000));
     e = "; expires=" + t.toGMTString();
   }
-  document.cookie = encodeURIComponent(n)+"="+encodeURIComponent(v)+e+"; path=/";
+  document.cookie = encodeURIComponent(n)+"="+encodeURIComponent(v)+e+"; path=/;secure";
 }
 function readCookie(n) {
   var e = encodeURIComponent(n) + "="
@@ -192,7 +260,7 @@ $(document).on('click touchstart','a',function(e) {
   e.preventDefault();
 });
 function hide() {
-  $('#content > .col-sm-9 > div, #search, #nav li').addClass('hidden');
+  $('#content > .col-sm-9 > div, #search, #nav li,#work .btn-group-justified').addClass('hidden');
   $('#content > .col-sm-3 li').remove();
 }
 function startTime() {
@@ -208,4 +276,9 @@ function startTime() {
     , d = setTimeout(startTime, 500);
     ;
   $("#work .jumbotron h1").html(h+":"+m+":"+s+" "+a);
+}
+function navbar() {
+  var action = 'show';
+  if($('#navbar').hasClass('in')) action = 'hide';
+  $('#navbar').collapse(action);
 }

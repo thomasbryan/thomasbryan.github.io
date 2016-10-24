@@ -37,3 +37,4 @@ textarea { resize: none; }
 #search input { width: 250px; }
 .t0 { display: none; }
 .twig { position: absolute; top: 5px; right: 5px; }
+#work pre:empty { display: none; }
