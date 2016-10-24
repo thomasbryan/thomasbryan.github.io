@@ -32,9 +32,10 @@ textarea { resize: none; }
   background-color: #e7e7e7;
 }
 #content > .col-sm-9 { padding: 20px; }
-#search { margin-top: 8px; }
 #search .form-group { margin-bottom: 0px; }
-#search input { width: 250px; }
+#search input { margin-top: 8px; width: 250px; }
+#nav { margin-top: 5px; }
+#nav .navbar-brand { height: auto; }
 .t0 { display: none; }
 .twig { position: absolute; top: 5px; right: 5px; }
 #work pre:empty { display: none; }
