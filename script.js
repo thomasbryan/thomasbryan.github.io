@@ -147,13 +147,11 @@ function trunklist(req) {
   });
 }
 $(document).on('click','#planning',function() {
-  navbar();
   app.mode="plan";
   init();
 });
 /* Working */
 $(document).on('click touchend','#working',function() {
-  navbar();
   app.mode="work";
   init();
 });
@@ -208,7 +206,6 @@ function loggedin(req) {
   plan();
 }
 $(document).on('click touchstart','#logout',function(e) {
-  navbar();
   deleteCookie('project');
   login();
 });
@@ -276,9 +273,4 @@ function startTime() {
     , d = setTimeout(startTime, 500);
     ;
   $("#work .jumbotron h1").html(h+":"+m+":"+s+" "+a);
-}
-function navbar() {
-  var action = 'show';
-  if($('#navbar').hasClass('in')) action = 'hide';
-  $('#navbar').collapse(action);
 }
