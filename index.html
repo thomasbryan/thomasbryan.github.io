@@ -54,19 +54,15 @@
               </div>
               <label for="info" class="sr-only">Info</label>
               <textarea name="info" id="info" class="form-control" placeholder="Info" rows="20"></textarea>
-              <br />
+    <nav class="navbar navbar-default navbar-fixed-bottom">
               <div class="col-xs-6">
                 <button class="btn btn-lg btn-block btn-primary" type="submit"><span class="hidden-xs">Save </span><i class="fa fa-save"></i></button>
               </div>
               <div id="reset" class="col-xs-6">
                 <div class="btn btn-lg btn-block btn-danger"><span class="hidden-xs">Cancel </span><i class="fa fa-trash"></i></div>
               </div>
-            </form>
-          </div>
-          <div id="work" class="hidden">
-            <div class="jumbotron">
-              <h1 class="text-center"></h1>
-              <h2 class="text-center"></h2>
+              
+    
               <div id="ip" class="btn-group btn-group-justified" role="group" aria-label="In Progress">
                 <div class="btn-group" role="group">
                   <button data-state="1" type="button" class="btn btn-warning btn-lg">In Progress <i class="fa fa-minus-circle"></i></button>
@@ -80,11 +76,17 @@
                   <button data-state="2" type="button" class="btn btn-success btn-lg">Done <i class="fa fa-check-circle"></i></button>
                 </div>
               </div>
+    </nav>
+            </form>
+          </div>
+          <div id="work" class="hidden">
+            <div class="jumbotron">
+              <h1 class="text-center"></h1>
+              <h2 class="text-center"></h2>
             </div>
             <textarea class="form-control" rows="5" disabled></textarea>
           </div>
-          <div id="report" class="hidden">
-          </div>
+          
         </div>
       </div>
     </div>
