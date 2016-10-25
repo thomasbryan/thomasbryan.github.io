@@ -14,18 +14,24 @@ $(document).ready(function() {
   if(app.auth!=null) init();
 });
 /* Planning */
-$(document).on('touchend','.navbar-brand',function() {
+$(document).on('click touchend','#brand',function() {
   var dom = '#content .col-sm-3';
-  if($(dom).hasClass('hidden-xs')) {
-    $(dom).removeClass('hidden-xs');
-  }else{
-    $(dom).addClass('hidden-xs');
+  if($(dom).not(':visible')) {
+    if($(dom).hasClass('hidden-xs')) {
+      $(dom).removeClass('hidden-xs');
+    }else{
+      $(dom).addClass('hidden-xs');
+    }
   }
 });
-$(document).on('click','.navbar-brand',function() {
-  plandata({"trunk":0,"branch":0,"name":"","info":""});
-  if($('#name').is(':visible')) $('#name').focus();
-  $('#twig').addClass('hidden');
+$(document).on('click','#reset',function() {
+  if($(this).hasClass('btn-block')) {
+
+  }else{
+    plandata({"trunk":0,"branch":0,"name":"","info":""});
+    $('#name').focus();
+    $('#twig').addClass('hidden');
+  }
 });
 $(document).on('click','.branch',function() {
   var branch = $(this).parent().data('branch')
@@ -56,8 +62,9 @@ $(document).on('click','.twig',function() {
   }
 });
 $(document).on('click','#twig',function() {
-  plandata({"trunk":parseInt($('#branch').val()),"branch":0,"name":"","info":""});
+  plandata({"trunk":parseInt($('#branch').val(),10),"branch":0,"name":"","info":""});
   $('#twig').addClass('hidden');
+  $('#content .col-sm-3').addClass('hidden-xs');
 });
 function planread(req) {
   $('#twig').removeClass('hidden');
@@ -74,7 +81,7 @@ function workread(req) {
     }
     $('#work').data('branch',req[0].branch);
     $('#work .jumbotron h2').html(req[0].name);
-    $('#work pre').html(req[0].info);
+    $('#work textarea').html(req[0].info);
     $(show).removeClass('hidden');
     $(hide).addClass('hidden');
   }
@@ -103,10 +110,15 @@ function plandata(req) {
     $('#name').prop('disabled',true);
     $('#info').prop('disabled',true);
     $('#twig, #plan button').addClass('hidden');
+    $('#reset').addClass('btn-block');
+    $('#reset .hidden-xs').html('Delete ');
+
   }else{
     $('#name').prop('disabled',false);
     $('#info').prop('disabled',false);
     $('#twig, #plan button').removeClass('hidden');
+    $('#reset').removeClass('btn-block');
+    $('#reset .hidden-xs').html('Cancel ');
   }
 }
 $('#plan form').on('submit',function(e) {
@@ -128,22 +140,30 @@ function createupdate(req) {
     $(id+' a span').html($('#name').val());
   }else{
     if(req.trunk > 0) {
+      if($('#branch-'+req.trunk+' .twig').hasClass('t0'))
+        $('#branch-'+req.trunk+' .twig').removeClass('t0').addClass('t1');
+      if($('#branch-'+req.trunk+' .twig').hasClass('btn-danger')){
+        $('#branch-'+req.trunk+' .twig').removeClass('btn-danger').addClass('btn-success');
+        $('.trunk-'+req.trunk).remove();
+      }
       $('#branch-'+req.trunk+' .twig').click();
     }else{
-      $('#content .nav').append('<li id="branch-'+branch+'" class="trunk-0" data-branch="'+branch+'"><a href="#" class="branch"><span>'+name+'</span></a><i class="twig t'+twigs+' btn btn-success fa fa-leaf">');
+      $('#trunks').append('<li id="branch-'+branch+'" class="trunk-0" data-branch="'+branch+'"><a href="#" class="branch"><span>'+name+'</span></a><i class="twig t'+twigs+' btn btn-success fa fa-leaf">');
     }
   }
 }
 function plan() {
   hide();
-  $('#plan, #search, #nav .plan').removeClass('hidden');
+  $('#plan, #search, #nav .plan, #trunks').removeClass('hidden');
   $('#name').focus();
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":0},"f":"trunklist"});
+  if($('#trunks').hasClass('trunks')) 
+    action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":0},"f":"trunklist"});
 }
 function trunklist(req) {
+  $('#trunks').removeClass('trunks');
   $.each(req,function(k,v) {
     if(v.state == 2) v.name = '<strike>'+v.name+'</strike>';
-    $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a><i class="twig t'+v.twigs+' btn btn-success fa fa-leaf">');
+    $('#trunks').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a><i class="twig t'+v.twigs+' btn btn-success fa fa-leaf">');
   });
 }
 $(document).on('click','#planning',function() {
@@ -163,13 +183,14 @@ $(document).on('click','#work button',function() {
 });
 function work() {
   hide();
-  $('#work, #nav .work').removeClass('hidden');
+  $('#work, #nav .work, #twigs').removeClass('hidden');
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","state":0},"f":"twiglist"});
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","state":1},"f":"workread"});
 }
 function twiglist(req) {
+  $('#twigs li').remove();
   $.each(req,function(k,v) {
-    $('#content .nav').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a>');
+    $('#twigs').append('<li id="branch-'+v.branch+'" class="trunk-0" data-branch="'+v.branch+'"><a href="#" class="branch"><span>'+v.name+'</span></a>');
   });
 }
 function state(req) {
@@ -177,10 +198,11 @@ function state(req) {
     case 0:$('#td').addClass('hidden');$('#ip').removeClass('hidden'); break;
     case 1:$('#ip').addClass('hidden');$('#td').removeClass('hidden'); break;
     case 2: 
-      $('#branch-'+req.branch).remove();
+      $('#twigs #branch-'+req.branch).remove();
+      $('#trunks #branch-'+req.branch+' span').wrapInner('<strike></strike>');
       $('#work').data('branch',undefined);
       $('#work .jumbotron h2').html('');
-      $('#work pre').html('');
+      $('#work textarea').html('');
       $('#ip, #td').addClass('hidden');
     break;
   }
@@ -203,7 +225,7 @@ function login() {
 function loggedin(req) {
   app.auth=req;
   updateCookie("project",app.auth,7);
-  plan();
+  init();
 }
 $(document).on('click touchstart','#logout',function(e) {
   deleteCookie('project');
@@ -257,8 +279,7 @@ $(document).on('click touchstart','a',function(e) {
   e.preventDefault();
 });
 function hide() {
-  $('#content > .col-sm-9 > div, #search, #nav li,#work .btn-group-justified').addClass('hidden');
-  $('#content > .col-sm-3 li').remove();
+  $('#content > .col-sm-9 > div, #content .nav, #search, #nav li,#work .btn-group-justified').addClass('hidden');
 }
 function startTime() {
   var t = new Date()

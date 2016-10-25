@@ -12,7 +12,7 @@
     <div id="init" style="position:absolute;top:0;right:0;bottom:0;left:0;background:#fff;"></div>
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#"><span class="hidden-xs">Project </span><i class="fa fa-tree text-success"></i></a>
+        <a id="brand" class="navbar-brand" href="#"><span class="hidden-xs">Project </span><i class="fa fa-tree text-success"></i></a>
         <form id="search" class="navbar-left hidden">
           <div class="form-group pull-left">
             <input type="text" class="form-control" placeholder="Search">
@@ -29,7 +29,8 @@
     <div class="container-fluid">
       <div id="content" class="row">
         <div class="hidden-xs col-xs-12 col-sm-3">
-          <ul class="nav"></ul>
+          <ul id="trunks" class="nav trunks"></ul>
+          <ul id="twigs" class="nav"></ul>
         </div>
         <div class="col-xs-12 col-sm-9 col-sm-offset-3">
           <div id="login" class="form-signin">
@@ -54,8 +55,11 @@
               <label for="info" class="sr-only">Info</label>
               <textarea name="info" id="info" class="form-control" placeholder="Info" rows="20"></textarea>
               <br />
-              <div class="col-xs-12 input-group">
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Save <i class="fa fa-save"></i></button>
+              <div class="col-xs-6">
+                <button class="btn btn-lg btn-block btn-primary" type="submit"><span class="hidden-xs">Save </span><i class="fa fa-save"></i></button>
+              </div>
+              <div id="reset" class="col-xs-6">
+                <div class="btn btn-lg btn-block btn-danger"><span class="hidden-xs">Cancel </span><i class="fa fa-trash"></i></div>
               </div>
             </form>
           </div>
@@ -77,14 +81,14 @@
                 </div>
               </div>
             </div>
-            <pre></pre>
+            <textarea class="form-control" rows="5" disabled></textarea>
           </div>
           <div id="report" class="hidden">
           </div>
         </div>
       </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="fonts/jquery.min.js"><\/script>')</script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="script.js"></script>
