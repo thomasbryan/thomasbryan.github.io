@@ -59,7 +59,7 @@ $(document).on('click','.twig',function() {
     $('#branch-'+branch+' .twig').removeClass('btn-danger').addClass('btn-success');
   }
 });
-$(document).on('click touchend','#twig',function() {
+$(document).on('click','#twig',function() {
   plandata({"trunk":parseInt($('#branch').val(),10),"branch":0,"name":"","info":""});
   $('#twig').addClass('hidden');
   $('#content .col-sm-3').addClass('hidden-xs');
