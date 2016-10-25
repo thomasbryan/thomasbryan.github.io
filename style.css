@@ -7,6 +7,7 @@ body {
   user-select: none;
 }
 textarea { resize: none; }
+nav .container { padding: 0; }
 #content > .col-sm-3 {
   position: fixed;
   top: 50px;
@@ -33,7 +34,7 @@ textarea { resize: none; }
 }
 #content > .col-sm-9 { padding: 20px; }
 #search .form-group { margin-bottom: 0px; }
-#search input { margin-top: 8px; }
+#search input { margin-top: 8px; width: 150px; }
 #nav { margin-top: 5px; }
 #nav .navbar-brand { height: auto; }
 .t0 { display: none; }
