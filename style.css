@@ -7,7 +7,7 @@ body {
   user-select: none;
 }
 textarea { resize: none; }
-nav .container-fluid { padding: 0; }
+@media (max-width: 767px) { nav .container-fluid { padding: 0; } }
 #content > .col-sm-3 {
   position: fixed;
   top: 50px;
