@@ -276,7 +276,7 @@ $(document).on('click touchstart','a',function(e) {
   e.preventDefault();
 });
 function hide() {
-  $('#content > .col-sm-9 > div, #content .nav, #search, #nav li,#work .btn-group-justified').addClass('hidden');
+  $('#content > .col-sm-9 > div, #content .nav, #search, #nav li,#work .btn-group-justified, #ip, #td').addClass('hidden');
 }
 function startTime() {
   var t = new Date()
