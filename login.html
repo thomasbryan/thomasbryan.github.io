@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project</title>
+    <link rel="icon" href="favicon.ico">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+  </head>
+  <body>
+    <div id="init" style="position:absolute;top:0;right:0;bottom:0;left:0;background:#fff;"></div>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <a id="brand" class="navbar-brand" href="#"><span class="hidden-xs">Project </span><i class="fa fa-tree text-success"></i></a>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div id="content" class="row">
+        <div class="hidden-xs col-xs-12 col-sm-3">
+          <ul id="trunks" class="nav trunks"></ul>
+          <ul id="twigs" class="nav"></ul>
+        </div>
+        <div class="col-xs-12 col-sm-9 col-sm-offset-3">
+          <div id="login" class="form-signin">
+            <form>
+              <label for="user" class="sr-only">User</label>
+              <input type="text" name="user" id="user" class="form-control" placeholder="User" required="" autofocus />
+              <br />
+              <label for="pass" class="sr-only">Pass</label>
+              <input type="password" name="pass" id="pass" class="form-control" placeholder="Pass" required="" />
+              <br />
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Login <i class="fa fa-sign-in"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="fonts/jquery.min.js"><\/script>')</script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="login.js"></script>
+  </body>
+</html>
