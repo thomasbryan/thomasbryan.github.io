@@ -83,7 +83,7 @@ function twigs() {
   }
   $('.r-'+app.twig).remove();
   $.each(app.ajax,function(k,v) {
-    $('#b-'+app.twig).after('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="#">'+pre+' '+v.name+'</a><i class="btn btn-success fa fa-leaf">');
+    $('#b-'+app.twig).after('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="#">'+pre+' <span>'+v.name+'</span></a><i class="btn btn-success fa fa-leaf">');
   });
   $('#b-'+app.twig+' > i').addClass('btn-danger').removeClass('btn-success');
   delete app.twig;
@@ -118,7 +118,7 @@ function branches() {
   $('#h li').remove();
   $('#'+app.dom).removeClass('z');
   $.each(app.ajax,function(k,v) {
-    $('#'+app.dom).append('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="#">'+v.name+'</a><i class="btn btn-success fa fa-leaf">');
+    $('#'+app.dom).append('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="#"><span>'+v.name+'</span></a><i class="btn btn-success fa fa-leaf">');
   });
 }
 $('#l').on('submit',function(e) {
@@ -135,11 +135,15 @@ function createupdate() {
   app.branch = $('#n').val();
   app.name = $('#p').val();
   if(app.branch != app.ajax.branch) {
-    $('#b-'+app.trunk).data('twigs',1).removeClass('t-0').addClass('t-1');
-    $('#b-'+app.trunk+' i').click();
+    if(app.trunk>0) {
+      $('#b-'+app.trunk).data('twigs',1).removeClass('t-0').addClass('t-1');
+      $('#b-'+app.trunk+' i').click();
+    }else{
+      //refresh page//
+    }
   }else{
     $('#b-'+app.branch).data('name',app.name);
-    $('#b-'+app.branch+' a').html(app.name);
+    $('#b-'+app.branch+' a span').html(app.name);
   }
 }
 $(document).on('click touchend','#e',function() {
