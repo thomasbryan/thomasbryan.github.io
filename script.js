@@ -1,5 +1,5 @@
 /* Init */
-var app = {"auth": readCookie('project'),"ajax":{},"branch":"","trunk":"","name":"","twigs":"","state":"","dom":"","mode":readCookie('mode')};
+var app = {"auth": readCookie('project'),"ajax":{},"branch":0,"trunk":0,"name":"","twigs":0,"state":0,"dom":"","mode":readCookie('mode')};
 if(typeof($.fn.modal) === 'undefined') document.write('<script src="fonts/bootstrap.min.js"><\/script>')
 $(document).ready(function() {
   if($('body').css('color') != 'rgb(51, 51, 51)') {
@@ -131,8 +131,16 @@ $('#l').on('submit',function(e) {
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"update","trunk":trunk,"branch":branch,"name":name,"info":info},"f":"createupdate"});
 });
 function createupdate() {
-  console.log(app.ajax);
-  console.log('createupdate');
+  app.trunk = $('#m').val();
+  app.branch = $('#n').val();
+  app.name = $('#p').val();
+  if(app.branch != app.ajax.branch) {
+    $('#b-'+app.trunk).data('twigs',1).removeClass('t-0').addClass('t-1');
+    $('#b-'+app.trunk+' i').click();
+  }else{
+    $('#b-'+app.branch).data('name',app.name);
+    $('#b-'+app.branch+' a').html(app.name);
+  }
 }
 $(document).on('click touchend','#e',function() {
   app.mode="work";
@@ -160,6 +168,9 @@ $(document).on('click touchend','#f',function() {
   branch();
 });
 $(document).on('click touchend','#s',function() {
+  reset();
+});
+function reset() {
   app.branch = 0;
   app.name = '';
   app.state = 0;
@@ -167,10 +178,16 @@ $(document).on('click touchend','#s',function() {
   app.twigs = 0;
   app.ajax.info = '';
   branch();
-});
+}
 $(document).on('click touchend','#t',function() {
-  console.log('delete');
+  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"delete","branch":app.branch},"f":"burnt"});
 });
+function burnt() {
+  reset();
+  $.each(app.ajax,function(k,v) {
+    $('#b-'+v).remove();
+  });
+}
 
 $(document).on('click','.btn-group-justified button',function() {
   var state = $(this).data('state');
@@ -196,6 +213,7 @@ function state() {
     case 2: 
       $('#h #b-'+app.branch).remove();
       $('#g #b-'+app.branch).addClass('s-2').removeClass('s-1').data('state',2);
+      //reset
       app.trunk = 0;
       app.branch = 0;
       app.name = '';
