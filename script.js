@@ -1,6 +1,5 @@
 /* Init */
 var app = {"auth": readCookie('project'),"ajax":{},"branch":0,"trunk":0,"name":"","twigs":0,"state":0,"dom":"","mode":readCookie('mode')};
-if(typeof($.mobile) === 'undefined') document.write('<script src="fonts/jquery.mobile.min.js"><\/script>')
 $(document).ready(function() {
   if($('body').css('color') != 'rgb(51, 51, 51)') {
     $localbootstrap = $('<link rel="stylesheet" href="fonts/bootstrap.min.css">');
@@ -30,7 +29,7 @@ function loggedin() {
   updateCookie("project",app.auth,7);
   init();
 }
-$(document).on('click tap','#b',function() {
+$(document).on('click touchend','#b',function() {
   var a = '3'
     , b = '9'
     , d = '.col-sm-'
@@ -45,15 +44,15 @@ $(document).on('click tap','#b',function() {
     }
   }
 });
-$(document).on('click tap','#c',function() {
+$(document).on('click touchend','#c',function() {
   deleteCookie("project");
   login();
 });
-$(document).on('click tap','#d',function() {
+$(document).on('click touchend','#d',function() {
   app.mode = "plan";
   init();
 });
-$(document).on('click tap','.col-sm-3 a',function() {
+$(document).on('click touchend','.col-sm-3 a',function() {
   $('.col-sm-3').addClass('hidden-xs');
   $('.col-sm-9').removeClass('hidden-xs');
 //TODO optimize logic
@@ -68,7 +67,7 @@ $(document).on('click tap','.col-sm-3 a',function() {
   }
 });
 //TODO fix click bug
-$(document).on('click tap','.col-sm-3 .t-1 i.btn-success',function() {
+$(document).on('click touchend','.col-sm-3 .t-1 i.btn-success',function() {
   var branch = $(this).parent().data('branch')
     , cache = $('#'+app.dom+' .r-'+branch).length
     ;
@@ -95,7 +94,7 @@ function twigs() {
   delete app.twig;
 }
 //TODO fix click bug.
-$(document).on('click tap','.col-sm-3 .t-1 i.btn-danger',function() {
+$(document).on('click touchend','.col-sm-3 .t-1 i.btn-danger',function() {
   var branch = $(this).parent().data('branch');
   $('.r-'+branch+'.t-1 > i').click();
   $('.r-'+branch).addClass('hidden');
@@ -153,7 +152,7 @@ function createupdate() {
     $('#b-'+app.branch+' a span').html(app.name);
   }
 }
-$(document).on('click tap','#e',function() {
+$(document).on('click touchend','#e',function() {
   app.mode="work";
   init();
 });
@@ -169,7 +168,7 @@ function progress() {
     action({"u":"https://home.thomasbryan.info/project/","d":{"req":"info","branch":app.branch},"f":"branch"});
   }
 }
-$(document).on('click tap','#f',function() {
+$(document).on('click touchend','#f',function() {
   app.trunk = app.branch;
   app.branch = 0;
   app.name = '';
@@ -178,7 +177,7 @@ $(document).on('click tap','#f',function() {
   app.ajax.info = '';
   branch();
 });
-$(document).on('click tap','#s',function() {
+$(document).on('click touchend','#s',function() {
   reset();
 });
 function reset() {
@@ -190,7 +189,7 @@ function reset() {
   app.ajax.info = '';
   branch();
 }
-$(document).on('click tap','#t',function() {
+$(document).on('click touchend','#t',function() {
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"delete","branch":app.branch},"f":"burnt"});
 });
 function burnt() {
@@ -282,5 +281,5 @@ function updateCookie(n,v,d) {
 function deleteCookie(n) {
   createCookie(n,"",-1);
 }
-$(document).on('click tap','a',function(e) { e.preventDefault(); });
+$(document).on('click touchstart','a',function(e) { e.preventDefault(); });
 function hide() { $('.a').addClass('hidden'); }
