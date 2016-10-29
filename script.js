@@ -1,12 +1,12 @@
 /* Init */
 var app = {"auth": readCookie('project'),"ajax":{},"branch":0,"trunk":0,"name":"","twigs":0,"state":0,"dom":"","mode":readCookie('mode')};
-if(typeof($.fn.modal) === 'undefined') document.write('<script src="fonts/bootstrap.min.js"><\/script>')
 $(document).ready(function() {
   if($('body').css('color') != 'rgb(51, 51, 51)') {
     $localbootstrap = $('<link rel="stylesheet" href="fonts/bootstrap.min.css">');
     $("head").prepend($localbootstrap);
     $localbootstrap.on('load',function() { $("#a").remove(); });
   }else{ $("#a").remove(); }
+
   if($('.fa').css('display') != 'inline-block') $("head").prepend('<link rel="stylesheet" href="fonts/font-awesome.min.css">');
   if(app.mode==null) app.mode = "plan";
   if(app.auth!=null) init();
@@ -31,12 +31,17 @@ function loggedin() {
   init();
 }
 $(document).on('click touchend','#b',function() {
-  var dom = '.col-sm-3';
-  if($(dom).not(':visible')) {
-    if($(dom).hasClass('hidden-xs')) {
-      $(dom).removeClass('hidden-xs');
+  var a = '3'
+    , b = '9'
+    , d = '.col-sm-'
+    ;
+  if($(d+a).not(':visible')) {
+    if($(d+a).hasClass('hidden-xs')) {
+      $(d+a).removeClass('hidden-xs');
+      $(d+b).addClass('hidden-xs');
     }else{
-      $(dom).addClass('hidden-xs');
+      $(d+a).addClass('hidden-xs');
+      $(d+b).removeClass('hidden-xs');
     }
   }
 });
@@ -50,6 +55,7 @@ $(document).on('click touchend','#d',function() {
 });
 $(document).on('click touchend','.col-sm-3 a',function() {
   $('.col-sm-3').addClass('hidden-xs');
+  $('.col-sm-9').removeClass('hidden-xs');
 //TODO optimize logic
   if(app.mode == "work" && app.state == 1) {
   }else{
@@ -135,6 +141,7 @@ function createupdate() {
   app.branch = $('#n').val();
   app.name = $('#p').val();
   if(app.branch != app.ajax.branch) {
+    $('#n').val(app.ajax.branch);
     if(app.trunk>0) {
       $('#b-'+app.trunk).data('twigs',1).removeClass('t-0').addClass('t-1');
       $('#b-'+app.trunk+' i').click();
@@ -213,6 +220,7 @@ function work() {
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"twigs","state":1},"f":"progress"});
 }
 function state() {
+  app.state=app.ajax.state;
   switch(app.ajax.state) {
     case 2: 
       $('#h #b-'+app.branch).remove();
