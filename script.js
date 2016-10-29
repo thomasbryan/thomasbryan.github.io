@@ -6,10 +6,9 @@ $(document).ready(function() {
     $("head").prepend($localbootstrap);
     $localbootstrap.on('load',function() { $("#a").remove(); });
   }else{ $("#a").remove(); }
-
   if($('.fa').css('display') != 'inline-block') $("head").prepend('<link rel="stylesheet" href="fonts/font-awesome.min.css">');
   if(app.mode==null) app.mode = "plan";
-  if(app.auth!=null) init();
+  if(app.auth!=null) { init(); }else{ login(); }
 });
 function login() {
   hide();
