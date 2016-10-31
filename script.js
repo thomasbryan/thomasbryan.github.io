@@ -29,82 +29,86 @@ function loggedin() {
   updateCookie("project",app.auth,7);
   init();
 }
-$(document).on('click touchend','#b',function() {
-  var a = '3'
-    , b = '9'
-    , d = '.col-sm-'
-    ;
-  if($(d+a).not(':visible')) {
-    if($(d+a).hasClass('hidden-xs')) {
-      $(d+a).removeClass('hidden-xs');
-      $(d+b).addClass('hidden-xs');
-    }else{
-      $(d+a).addClass('hidden-xs');
-      $(d+b).removeClass('hidden-xs');
+$(document).on('click touchstart','#b',function() {
+  if($('#i').not(':visible')) {
+    var a = '3'
+      , b = '9'
+      , d = '.col-sm-'
+      ;
+    if($(d+a).not(':visible')) {
+      if($(d+a).hasClass('hidden-xs')) {
+        $(d+a).removeClass('hidden-xs');
+        $(d+b).addClass('hidden-xs');
+      }else{
+        $(d+a).addClass('hidden-xs');
+        $(d+b).removeClass('hidden-xs');
+      }
     }
   }
 });
-$(document).on('click touchend','#c',function() {
+$(document).on('click touchstart','#c',function() {
   deleteCookie("project");
   login();
 });
-$(document).on('click touchend','#d',function() {
+$(document).on('click touchstart','#d',function() {
   app.mode = "plan";
   init();
 });
-$(document).on('click touchend','.col-sm-3 a',function() {
+$(document).on('click touchstart','.col-sm-3 i.btn-info',function(e) {
   $('.col-sm-3').addClass('hidden-xs');
   $('.col-sm-9').removeClass('hidden-xs');
 //TODO optimize logic
   if(app.mode == "work" && app.state == 1) {
   }else{
-    app.branch = $(this).parent().data('branch');
-    app.name = $(this).parent().data('name');
-    app.state = $(this).parent().data('state');
-    app.trunk = $(this).parent().data('trunk');
-    app.twigs = $(this).parent().data('twigs');
+    app.branch = $(this).parent().parent().data('branch');
+    app.name = $(this).parent().parent().data('name');
+    app.state = $(this).parent().parent().data('state');
+    app.trunk = $(this).parent().parent().data('trunk');
+    app.twigs = $(this).parent().parent().data('twigs');
     action({"u":"https://home.thomasbryan.info/project/","d":{"req":"info","branch":app.branch},"f":"branch"});
   }
+  e.preventDefault();
 });
 //TODO fix click bug
-$(document).on('click touchend','.col-sm-3 .t-1 i.btn-success',function() {
-  var branch = $(this).parent().data('branch')
+$(document).on('click touchstart','.col-sm-3 .t-1 i.btn-success',function(e) {
+  var branch = $(this).parent().parent().data('branch')
     , cache = $('#'+app.dom+' .r-'+branch).length
     ;
   if(cache>0) {
     $('#'+app.dom+' .r-'+branch).removeClass('hidden');
-    $('#b-'+branch+' > i').addClass('btn-danger').removeClass('btn-success');
+    $('#b-'+branch+' i.btn-success').addClass('btn-danger').removeClass('btn-success');
   }else{
     app.twig=branch;
     action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":branch},"f":"twigs"});
   }
+  e.preventDefault();
 });
 function twigs() {
   var lvl = $('#b-'+app.twig+' a .fa-chevron-right').length + 1
     , pre = ''
     ;
   for(i=0;i<lvl;i++) {
-    pre += '<i class="fa fa-chevron-right"></i>';
+    pre += '<i class="s fa fa-chevron-right"></i>';
   }
   $('.r-'+app.twig).remove();
   $.each(app.ajax,function(k,v) {
-    $('#b-'+app.twig).after('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="#">'+pre+' <span>'+v.name+'</span></a><i class="btn btn-success fa fa-leaf">');
+    $('#b-'+app.twig).after('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="javascript:void(0);"><i class="btn btn-info fa fa-leaf"></i>'+pre+' <span>'+v.name+'</span><i class="btn btn-success fa fa-leaf"></i></a>');
   });
-  $('#b-'+app.twig+' > i').addClass('btn-danger').removeClass('btn-success');
+  $('#b-'+app.twig+' i.btn-success').addClass('btn-danger').removeClass('btn-success');
   delete app.twig;
 }
 //TODO fix click bug.
-$(document).on('click touchend','.col-sm-3 .t-1 i.btn-danger',function() {
-  var branch = $(this).parent().data('branch');
+$(document).on('click touchstart','.col-sm-3 .t-1 i.btn-danger',function(e) {
+  var branch = $(this).parent().parent().data('branch');
   $('.r-'+branch+'.t-1 > i').click();
   $('.r-'+branch).addClass('hidden');
-  $('#b-'+branch+' > i').removeClass('btn-danger').addClass('btn-success');
+  $('#b-'+branch+' i.btn-danger').removeClass('btn-danger').addClass('btn-success');
+  e.preventDefault();
 });
 function branch() {
   $('#m').val(app.trunk);
   $('#n').val(app.branch);
   $('#o').val('');
-  $('#p').focus();
   $('#p, #q').prop('disabled',false);
   if(app.mode == "plan") $('#r, #s').removeClass('hidden');
   $('#f, #t').addClass('hidden');
@@ -123,7 +127,7 @@ function branches() {
   $('#h li').remove();
   $('#'+app.dom).removeClass('z');
   $.each(app.ajax,function(k,v) {
-    $('#'+app.dom).append('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="#"><span>'+v.name+'</span></a><i class="btn btn-success fa fa-leaf">');
+    $('#'+app.dom).append('<li id="b-'+v.branch+'" class="r-'+v.trunk+' s-'+v.state+' t-'+v.twigs+'" data-branch="'+v.branch+'" data-name="'+v.name+'" data-state="'+v.state+'" data-trunk="'+v.trunk+'" data-twigs="'+v.twigs+'"><a href="javascript:void(0);"><i class="btn btn-info fa fa-leaf"></i><span>'+v.name+'</span><i class="btn btn-success fa fa-leaf"></i></a>');
   });
 }
 $('#l').on('submit',function(e) {
@@ -152,7 +156,7 @@ function createupdate() {
     $('#b-'+app.branch+' a span').html(app.name);
   }
 }
-$(document).on('click touchend','#e',function() {
+$(document).on('click touchstart','#e',function() {
   app.mode="work";
   init();
 });
@@ -166,9 +170,13 @@ function progress() {
     app.trunk = app.ajax[0].trunk;
     app.twigs = app.ajax[0].twigs;
     action({"u":"https://home.thomasbryan.info/project/","d":{"req":"info","branch":app.branch},"f":"branch"});
+  }else{
+    if(app.twigs > 0) {
+      reset();
+    }
   }
 }
-$(document).on('click touchend','#f',function() {
+$(document).on('click touchstart','#f',function() {
   app.trunk = app.branch;
   app.branch = 0;
   app.name = '';
@@ -177,7 +185,7 @@ $(document).on('click touchend','#f',function() {
   app.ajax.info = '';
   branch();
 });
-$(document).on('click touchend','#s',function() {
+$(document).on('click touchstart','#s',function() {
   reset();
 });
 function reset() {
@@ -189,7 +197,7 @@ function reset() {
   app.ajax.info = '';
   branch();
 }
-$(document).on('click touchend','#t',function() {
+$(document).on('click touchstart','#t',function() {
   action({"u":"https://home.thomasbryan.info/project/","d":{"req":"delete","branch":app.branch},"f":"burnt"});
 });
 function burnt() {
@@ -200,14 +208,15 @@ function burnt() {
 }
 
 $(document).on('click','.btn-group-justified button',function() {
-  var state = $(this).data('state');
-  action({"u":"https://home.thomasbryan.info/project/","d":{"req":"state","branch":app.branch,"state":state},"f":"state"});
+  if(app.branch > 0) {
+    var state = $(this).data('state');
+    action({"u":"https://home.thomasbryan.info/project/","d":{"req":"state","branch":app.branch,"state":state},"f":"state"});
+  }
 });
 //bug switch from work does not show #f new leaf
 function plan() {
   hide();
   $('.c').removeClass('hidden');
-  $('#p').focus();
   app.dom = 'g';
   if($('#g').hasClass('z')) action({"u":"https://home.thomasbryan.info/project/","d":{"req":"trunks","branch":0},"f":"branches"});
 }
@@ -224,14 +233,7 @@ function state() {
     case 2: 
       $('#h #b-'+app.branch).remove();
       $('#g #b-'+app.branch).addClass('s-2').removeClass('s-1').data('state',2);
-      //reset
-      app.trunk = 0;
-      app.branch = 0;
-      app.name = '';
-      app.state = 0;
-      app.twigs = 0;
-      app.ajax.info = '';
-      branch();
+      reset();
     case 0:$('#v, #w').addClass('hidden');$('#u').removeClass('hidden'); break;
     case 1:$('#u').addClass('hidden');$('#v, #w').removeClass('hidden'); break;
   }
@@ -281,5 +283,17 @@ function updateCookie(n,v,d) {
 function deleteCookie(n) {
   createCookie(n,"",-1);
 }
-$(document).on('click touchstart','a',function(e) { e.preventDefault(); });
+$("textarea").keyup(function(e) {
+  if (e.which == 8 || e.which == 46) {
+    if( ($(this).height() + parseFloat($(this).css("font-size"))) > this.scrollHeight ) {
+      $(this).height(parseFloat($(this).css("font-size")));
+    }
+  }
+  if($('.col-sm-9').outerHeight() < ( $(window).height() - 120 ) ) {
+    while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
+      $(this).height($(this).height()+1);
+    };
+  }
+});
+$(document).on('click touchstart','nav a',function(e) { e.preventDefault(); });
 function hide() { $('.a').addClass('hidden'); }
