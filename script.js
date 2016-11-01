@@ -54,9 +54,6 @@ $(document).on('click touchstart','#d',function() {
   app.mode = "plan";
   init();
 });
-$(document).on('click','.hidden-xs.col-sm-3 a',function() {
-  $(this).children('i.btn-info').click();
-});
 $(document).on('click touchstart','.col-sm-3 i.btn-info',function(e) {
   $('.col-sm-3').addClass('hidden-xs');
   $('.col-sm-9').removeClass('hidden-xs');
