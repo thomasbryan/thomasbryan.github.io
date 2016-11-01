@@ -54,7 +54,13 @@ $(document).on('click touchstart','#d',function() {
   app.mode = "plan";
   init();
 });
+$(document).on('click','.hidden-xs.col-sm-3 a',function(e) {
+  info(e);
+});
 $(document).on('click touchstart','.col-sm-3 i.btn-info',function(e) {
+  info(e);
+});
+function info(e) {
   $('.col-sm-3').addClass('hidden-xs');
   $('.col-sm-9').removeClass('hidden-xs');
 //TODO optimize logic
@@ -68,7 +74,8 @@ $(document).on('click touchstart','.col-sm-3 i.btn-info',function(e) {
     action({"u":"https://home.thomasbryan.info/project/","d":{"req":"info","branch":app.branch},"f":"branch"});
   }
   e.preventDefault();
-});
+}
+
 //TODO fix click bug
 $(document).on('click touchstart','.col-sm-3 .t-1 i.btn-success',function(e) {
   var branch = $(this).parent().parent().data('branch')
