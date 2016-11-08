@@ -283,6 +283,7 @@ function updateCookie(n,v,d) {
 function deleteCookie(n) {
   createCookie(n,"",-1);
 }
+/*
 $("textarea").keyup(function(e) {
   if (e.which == 8 || e.which == 46) {
     if( ($(this).height() + parseFloat($(this).css("font-size"))) > this.scrollHeight ) {
@@ -295,5 +296,6 @@ $("textarea").keyup(function(e) {
     };
   }
 });
+*/
 $(document).on('click touchstart','nav a',function(e) { e.preventDefault(); });
 function hide() { $('.a').addClass('hidden'); }
