@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="favicon.ico" rel="icon" type="image/x-icon">
+  <title>Chess</title>
+  <meta charset="utf-8">
+  <style>
+    body { padding-top: 50px; overflow:hidden;}
+    td, th { text-align:center; }
+    thead th a { display:block; }
+    thead th a:hover, thead th a:focus { text-decoration:none; }
+    thead { background: #fff; }
+    .light { background: #a7b9e9; }
+    .dark { background: #5a69ac; }
+    .black { color: #000; }
+    .white { color: #fff; }
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th { border-top:0px; }
+  </style>
+  <script src="js/jquery.min.js"></script>
+	<script>
+    function buildChess() {
+      var board = [
+          [0,1,2,3,4,2,1,0],
+          [5,5,5,5,5,5,5,5],
+          [6,6,6,6,6,6,6,6],
+          [6,6,6,6,6,6,6,6],
+          [6,6,6,6,6,6,6,6],
+          [6,6,6,6,6,6,6,6],
+          [7,7,7,7,7,7,7,7],
+          [8,9,10,11,12,10,9,8],
+        ]
+        , pieces = ["tower black","knight black", "bishop black","queen black","king black","pawn black","","pawn white","tower white","knight white","bishop white","queen white","king white"]
+        , html = ""
+        , square = true
+        , rank = 8
+        , files = ["A","B","C","D","E","F","G","H"]
+        ;
+      $.each(board,function(k,v) {
+        html+="<tr><td></td><td></td>";
+        file = 0;
+        $.each(v,function(kk,vv) {
+          html+="<td data-rank='"+rank+"' data-file='"+files[file]+"' class='"+(square?"light":"dark")+"'>";
+          if(square){square=false;}else{square=true;}
+          file++;
+          if(pieces[vv].length > 0) {
+            html+="<span class='glyphicon glyphicon-"+pieces[vv]+"'></span>";
+          }else{
+            html+="&nbsp;";
+          }
+          html+="</td>";
+        });
+        if(square){square=false;}else{square=true;}
+        rank--;
+        html+="<td></td><td></td></tr>";
+      });
+      $("#chess tbody").html(html);
+    }
+    $(document).ready(function() {
+      buildChess();
+    });
+	</script>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav"></ul>
+    </div>
+  </nav>
+  <div class="jumbotron">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <table id="chess" class="table">
+            <thead>
+              <tr>
+                <td colspan="2">
+                White
+                </td>
+                <td colspan="8">
+
+                </td>
+                <td colspan="2">
+                Black
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body></html>
